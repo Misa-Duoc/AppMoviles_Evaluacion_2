@@ -10,7 +10,7 @@ data class Producto (
     val nombre:String,
     val precio:String,
     val cantidad:String,
-    val tipo:String,
+    val direccion:String,
     val tipoEntrega:Boolean,
     val imagenUri: String? = null
 )

@@ -1,6 +1,7 @@
 package com.example.level_up.view
 
 import androidx.compose.foundation.Image
+import com.example.level_up.ui.common.productImageResByName
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -62,6 +63,8 @@ fun ProductoFormScreen(
 
     val productos:List<Producto> by viewModel.productos.collectAsState()
 
+    val imageResId = productImageResByName(nombre)
+
 
     Scaffold (
         bottomBar = {
@@ -84,12 +87,14 @@ fun ProductoFormScreen(
         { // Inicio Contenido
 
 
+            // Cambiado de android.R.drawable.ic_menu_gallery
             Image(
-                painter= painterResource(id= android.R.drawable.ic_menu_gallery),
-                contentDescription = "Imagen Producto",
+                painter= painterResource(id= imageResId), // <-- Usando el ID dinámico
+                contentDescription = "Imagen del producto: $nombre",
                 modifier=Modifier
                     .height(150.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Fit
             )// fin Image
 
 
@@ -138,7 +143,7 @@ fun ProductoFormScreen(
                         nombre=nombre,
                         precio =precio,
                         cantidad = cantidad.text,
-                        tipo=tipo.text,
+                        direccion = tipo.text,
                         tipoEntrega=tipoEntrega
                     )
                     // hace la magia
@@ -186,7 +191,7 @@ fun ProductoFormScreen(
                             ) // fin text 2
 
                             Text(
-                                text="Tipo de entrega:: ${producto.tipo}  ",
+                                text="Direccion entrega: ${producto.direccion}  ",
                                 style = MaterialTheme.typography.bodyMedium
                             ) // fin text 3
 

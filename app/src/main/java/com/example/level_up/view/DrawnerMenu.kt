@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookOnline
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material.icons.filled.Grass
@@ -45,13 +46,13 @@ fun DrawerMenu(
             modifier =Modifier
                 .fillMaxWidth()
                 .height(120.dp)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(MaterialTheme.colorScheme.onBackground)
         ) // fin box
         { //inicio contenido
             Text(
                 text="Categorias user:$username",
                 style=MaterialTheme.typography.headlineSmall,
-                color= MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.onPrimary,
                 modifier =Modifier
                     .align(Alignment.BottomStart)
             )
@@ -133,6 +134,16 @@ fun DrawerMenu(
                 )
             }// fin item 5
 
+            item{
+                NavigationDrawerItem(
+                    label={Text("Escanear QR")},
+                    selected = false,
+                    onClick = {
+                        navController.navigate("camera")
+                    },//fin onclick
+                    icon = {Icon(Icons.Default.CameraAlt , contentDescription = "Camera"  )}
+                )
+            }// fin item 6
 
         } // fin Lazy
 

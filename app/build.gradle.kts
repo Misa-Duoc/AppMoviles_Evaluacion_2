@@ -78,6 +78,27 @@ dependencies {
     // Para gradle Kotlin DSL
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.0-alpha01")
 
+    //  implementation(libs.androidx.compose.runtime.livedata)
+
+    // Option 1: If you add it to libs.versions.toml
+    //implementation(libs.androidx.compose.runtime.livedata)
+    // OR Option 2: Direct notation
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
+// CameraX
+    val camerax_version = "1.3.3"
+    implementation("androidx.camera:camera-core:$camerax_version")
+    implementation("androidx.camera:camera-camera2:$camerax_version")
+    implementation("androidx.camera:camera-lifecycle:$camerax_version")
+    implementation("androidx.camera:camera-view:$camerax_version")
+
+// ZXing para leer QR
+    implementation("com.google.zxing:core:3.5.3")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+
+    // ML Kit Barcode Scanning
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
