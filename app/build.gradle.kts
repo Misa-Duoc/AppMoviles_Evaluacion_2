@@ -54,6 +54,14 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
+    // Para la imagen
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // Para las animaciones
+    implementation("androidx.compose.animation:animation")
+    implementation("androidx.compose.animation:animation-core")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
+
     // Navegación con Jetpack Compose
     implementation("androidx.navigation:navigation-compose:2.7.7")
 

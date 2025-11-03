@@ -12,4 +12,5 @@ data class Producto (
     val cantidad:String,
     val tipo:String,
     val tipoEntrega:Boolean,
+    val imagenUri: String? = null
 )

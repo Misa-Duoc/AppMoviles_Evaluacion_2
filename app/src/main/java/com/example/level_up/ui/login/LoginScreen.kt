@@ -43,8 +43,8 @@ import androidx.navigation.compose.rememberNavController
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-// Permite usar funciones Material 3 qe son experimentales
-@Composable  // Genera Interfz Garfica
+// Permite usar funciones Material 3 que son experimentales
+@Composable  // Genera Interfaz Grafica
 
 fun LoginScreen(
     navController: NavController,
@@ -73,7 +73,7 @@ fun LoginScreen(
             // Crea estructura basica de la pantalla, Se define topBar, BottomBar
             topBar = {
                 TopAppBar(title = {Text("Tienda Level-Up Gaming",
-                    color =MaterialTheme.colorScheme.onPrimary,
+                    color = MaterialTheme.colorScheme.onPrimary,
                 )})
 
                 // Crea un AppBar con un titulo
@@ -88,12 +88,13 @@ fun LoginScreen(
                 modifier = Modifier
                     .padding( innerPadding)
                     // Evita que quede oculto
-                    .fillMaxSize() // Hace que la columnna tome todo el tamaño
+                    .fillMaxSize()
+                    // Hace que la columnna tome tod0 el tamaño
                     .padding(16.dp)
                     .background(Color(0xFFF0F0F0)), // gris Claro
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally  // Centra horizontalmente
-                //Define  que elementos dentro la columna estaran separados por 20.dp
+                //Define que elementos dentro de la columna estaran separados por 20.dp
             )// fin column
             {// inicio Contenido
                 Text(text="¡ Bienvenido Gamer !",
@@ -102,9 +103,6 @@ fun LoginScreen(
 
 
                 ) // Muestra un texto simple en la pantalla
-
-
-
 
                 Image(  // insertar una imagen en la interfaz
                     painter= painterResource(id = R.drawable.level_up_gamer_logo),

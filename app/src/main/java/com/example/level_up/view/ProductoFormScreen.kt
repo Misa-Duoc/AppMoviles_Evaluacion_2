@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +38,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.level_up.data.model.Producto
 import com.example.level_up.viewmodel.ProductoViewModel
+import coil.compose.rememberAsyncImagePainter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,6 +83,7 @@ fun ProductoFormScreen(
         )// fin Column
         { // Inicio Contenido
 
+
             Image(
                 painter= painterResource(id= android.R.drawable.ic_menu_gallery),
                 contentDescription = "Imagen Producto",
@@ -88,6 +91,8 @@ fun ProductoFormScreen(
                     .height(150.dp)
                     .fillMaxWidth()
             )// fin Image
+
+
 
             Spacer(modifier =Modifier.height(16.dp))
 
