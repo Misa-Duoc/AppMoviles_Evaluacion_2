@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -50,6 +51,33 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    // Para la imagen
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // Para las animaciones
+    implementation("androidx.compose.animation:animation")
+    implementation("androidx.compose.animation:animation-core")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
+
+    // Navegación con Jetpack Compose
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Íconos y extendidos
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.material:material-icons-extended:1.7.0-beta01")
+
+    // Dependencias Room
+    implementation("androidx.room:room-runtime:2.6.1")  // Versión actualizada
+    kapt("androidx.room:room-compiler:2.6.1")          // Misma versión
+    implementation("androidx.room:room-ktx:2.6.1")     // Misma versión
+
+    // Para gradle Kotlin DSL
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.0-alpha01")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
