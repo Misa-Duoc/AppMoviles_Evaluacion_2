@@ -1,36 +1,15 @@
 package com.example.level_up.ui.login
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import com.example.level_up.R
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -40,221 +19,189 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-
+import com.example.level_up.R
 
 @OptIn(ExperimentalMaterial3Api::class)
-// Permite usar funciones Material 3 que son experimentales
-@Composable  // Genera Interfaz Grafica
-
+@Composable
 fun LoginScreen(
     navController: NavController,
-    vm: LoginViewModel= viewModel()
+    vm: LoginViewModel = viewModel()
+){ // inicio
 
-){
-
-    val state =vm.uiState
+    val state = vm.uiState
     var showPass by remember { mutableStateOf(false) }
 
-    // darkColorScheme: Funcion de material3, define un color oscuro
-    val ColorScheme = darkColorScheme(
-        primary= Color(0xFF98222E),
+    // esquema oscuro
+    val colorScheme = darkColorScheme(
+        primary = Color(0xFF1E90FF),
         onPrimary = Color.White,
-        onSurface = Color(0xFF333333), //Gris
-    ) // fin dark
-
+        background = Color.Black,
+        surface = Color.Black,
+        onSurface = Color.White
+    )
 
     MaterialTheme(
-        colorScheme = ColorScheme
-    ){ // inicio Aplicar Material
+        colorScheme = colorScheme
+    ) { // inicio aplicar material
 
-
-
-        Scaffold (
-            // Crea estructura basica de la pantalla, Se define topBar, BottomBar
+        Scaffold(
             topBar = {
-                TopAppBar(title = {Text("Tienda Level-Up Gaming",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )})
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Level-Up Gamer",
+                            color = Color(0xFF1E90FF)
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Black
+                    )
+                )
+            },
+            containerColor = Color.Black
+        ) { innerPadding ->
 
-                // Crea un AppBar con un titulo
-
-            }// fin topBar
-        ) // fin Scaff
-        {// Inicio Inner
-                innerPadding ->
-            // Representa el espacio interno para que no choque con el topBar
-
-            Column (  //   Coloca los elementos de la Ui
+            Column(
                 modifier = Modifier
-                    .padding( innerPadding)
-                    // Evita que quede oculto
+                    .padding(innerPadding)
                     .fillMaxSize()
-                    // Hace que la columnna tome tod0 el tamaño
-                    .padding(16.dp)
-                    .background(Color(0xFFF0F0F0)), // gris Claro
+                    .background(Color.Black)
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally  // Centra horizontalmente
-                //Define que elementos dentro de la columna estaran separados por 20.dp
-            )// fin column
-            {// inicio Contenido
-                Text(text="¡ Bienvenido Gamer !",
-                    style= MaterialTheme.typography.headlineMedium,
-                    color=MaterialTheme.colorScheme.primary
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) { // inicio contenido
 
+                Text(
+                    text = "¡Bienvenido Gamer!",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color(0xFF1E90FF)
+                )
 
-                ) // Muestra un texto simple en la pantalla
-
-                Image(  // insertar una imagen en la interfaz
-                    painter= painterResource(id = R.drawable.level_up_gamer_logo),
+                Image(
+                    painter = painterResource(id = R.drawable.level_up_gamer_logo),
                     contentDescription = "Logo App",
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp),
                     contentScale = ContentScale.Fit
-                    // Ajusta la imagen para que encaje dentro del espacio
-
-                ) // Fin Image
-
-
-                // agregar un espacio entre la imagen y el boton
-
-                Spacer(modifier = Modifier.height(66.dp))
-
-
-
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                )// Fin Row
-                {// Aplica row
-                    Text("Usuario",
-                        style =MaterialTheme.typography.bodyLarge.copy(
-                            color=MaterialTheme.colorScheme.onSurface.copy(alpha=0.8f),
-                            fontWeight = FontWeight.Bold),
-                        modifier = Modifier
-                            .padding(end=8.dp)
-                    )// fin texto 1
-
-                } // fin Aplica row
-
-
-                OutlinedTextField(
-                    value=state.username,
-                    onValueChange = vm::onUsernameChange,
-                    label={Text("Usuario")},
-                    singleLine = true,
-                    modifier=Modifier.fillMaxWidth(0.95f)
                 )
 
+                Spacer(modifier = Modifier.height(40.dp))
+
+                // -------- Usuario ----------
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                )// Fin Row
-
-                {
-                    Text("Contraseña",
-                        style =MaterialTheme.typography.bodyLarge.copy(
-                            color=MaterialTheme.colorScheme.onSurface.copy(alpha=0.8f),
-                            fontWeight = FontWeight.Bold),
-                        modifier = Modifier
-                            .padding(end=8.dp)
-                    )
-
-                } // fin Aplica row
-                OutlinedTextField(
-                    value=state.password,
-                    onValueChange = vm::onPasswordChange,
-                    label={Text("Contraseña")},
-                    singleLine = true,
-                    visualTransformation = if (showPass) VisualTransformation.None else
-                        PasswordVisualTransformation(),
-
-                    trailingIcon = {
-                        TextButton( onClick = {showPass =!showPass})
-                        {
-                            Text(if (showPass) "Ocultar" else "Ver")
-                        }
-                    },// fin trail
-
-                    modifier=Modifier.fillMaxWidth(0.95f)
-
-                )// Password
-
-
-
-
-
-                if (state.error !=null){
-                    Spacer(Modifier.height(8.dp))
+                        .padding(horizontal = 16.dp)
+                ) {
                     Text(
-                        text=state.error ?:"",
-                        color= MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
+                        "Usuario",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
                     )
-
                 }
 
+                OutlinedTextField(
+                    value = state.username,
+                    onValueChange = vm::onUsernameChange,
+                    label = { Text("Usuario", color = Color.White) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(0.95f),
+                    textStyle = LocalTextStyle.current.copy(color = Color.White),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = Color.White,
+                        cursorColor = Color.White,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent
+                    )
+                )
 
-                // agregar un espacio entre la imagen y el boton
+                // -------- Contraseña ----------
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        "Contraseña",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
 
-                Spacer(modifier = Modifier.height(66.dp))
+                OutlinedTextField(
+                    value = state.password,
+                    onValueChange = vm::onPasswordChange,
+                    label = { Text("Contraseña", color = Color.White) },
+                    singleLine = true,
+                    visualTransformation = if (showPass)
+                        VisualTransformation.None
+                    else
+                        PasswordVisualTransformation('•'),   // puntitos blancos
+                    trailingIcon = {
+                        TextButton(onClick = { showPass = !showPass }) {
+                            Text(
+                                if (showPass) "Ocultar" else "Ver",
+                                color = Color(0xFF1E90FF)
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(0.95f),
+                    textStyle = LocalTextStyle.current.copy(color = Color.White),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = Color.White,
+                        cursorColor = Color.White,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent
+                    )
+                )
 
-                Button(onClick = {/* accion futura*/
-                    vm.submit { user ->
-                        //navController.navigate("muestraDatos/user")
-                        navController.navigate("DrawerMenu/user")
+                // mensaje de error
+                if (state.error != null) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = state.error ?: "",
+                        color = Color(0xFF39FF14),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
-                        // Navegar a una pantalla pasando el parametro
-                        { // inicio navegar
-                            popUpTo("login"){inclusive= true}
-                            // No puede volver al login con Back
+                Spacer(modifier = Modifier.height(40.dp))
 
-                            // evite crear una nueva instancia
-                            launchSingleTop =true
-                        } // termino navegar
+                Button(
+                    onClick = {
+                        vm.submit { user ->
+                            navController.navigate("DrawerMenu/user") {
+                                popUpTo("login") { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        }
+                    },
+                    enabled = !state.isLoading,
+                    modifier = Modifier.fillMaxWidth(0.6f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1E90FF),
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(if (state.isLoading) "Validando" else "Iniciar Sesion")
+                }
 
-                    }// fin submit
-                },
-                    enabled=!state.isLoading,
-                    modifier = Modifier.fillMaxWidth(0.6f)
+            } // fin contenido
+        } // fin scaffold
+    } // fin aplicar material
+} // fin LoginScreen
 
-                )//fin button
-
-
-                {
-                    // Text("Presioname")
-                    Text(if(state.isLoading) "Validando" else "Iniciar Sesion" )
-
-                } // fin boton
-
-
-
-            }// fin Contenido
-
-        } // Fin inner
-
-
-    } // fin Aplicar Material
-}// Fin HomeScreen
-
-
-@Preview(showBackground = true) // Genera la vista
-@Composable  // Genera Interfaz Grafica
-
-fun LoginScreenPreview(){
-
-    //   Crear un navController de manera ficticia para fines de la vista previa
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
     val navController = rememberNavController()
-
-    // Puedes usar un ViewModel simulado aquí si no tienes acceso a uno real
-    val vm = LoginViewModel() // Suponiendo que LoginViewModel está correctamente configurado para la vista previa
-
+    val vm = LoginViewModel()
     LoginScreen(navController = navController, vm = vm)
-
-
-}// Fin LoginScreen
+}

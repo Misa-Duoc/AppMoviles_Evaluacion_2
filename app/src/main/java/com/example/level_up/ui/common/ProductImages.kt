@@ -12,14 +12,15 @@ private fun normalizeKey(raw: String): String {
 }
 
 @DrawableRes
+// devuelve la imagen según el nombre del producto
 fun productImageResByName(nombre: String): Int {
-    return when (normalizeKey(nombre)) {
-        "auriculares gamer hyperx", "hyperx" -> R.drawable.auriculares_gamer_hyperx
-        "mouse logitech g203", "logitech" -> R.drawable.mouse_logitech_g203
-        "playstation5", "sony" -> R.drawable.playstation5
-        "carcassonne", "hasbro" -> R.drawable.carcassonne
-        "mousepad", "hyperx" -> R.drawable.mousepad1
-        // Agrega aquí más sinónimos/variantes según tu catálogo
-        else -> android.R.drawable.ic_menu_gallery // fallback
+    return when (nombre.lowercase()) {
+        "auriculares gamer hyperx" -> R.drawable.auriculares_gamer_hyperx
+        "mouse logitech g203" -> R.drawable.mouse_logitech_g203
+        "playstation 5" -> R.drawable.playstation5
+        "mousepad" -> R.drawable.mousepad1
+        "carcassone" -> R.drawable.carcassonne
+        "catan" -> R.drawable.catan
+        else -> R.drawable.placeholder
     }
 }
