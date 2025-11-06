@@ -1,14 +1,13 @@
 package com.example.level_up.ui.home
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.level_up.ui.components.TopBarLevelUp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MuestraDatosScreen(
     username: String,
@@ -16,8 +15,14 @@ fun MuestraDatosScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Muestra Datos") }
+            TopBarLevelUp(
+                onLogoutClick = {
+                    navController.navigate("login") {
+                        // sacamos la pantalla actual del backstack
+                        popUpTo("login") { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
             )
         }
     ) { innerPadding ->
@@ -29,10 +34,11 @@ fun MuestraDatosScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Bienvenido, $username",
+                text = "Hola, $username 👋",
                 style = MaterialTheme.typography.headlineMedium
             )
 
+            // puedes dejar este botón como salida secundaria
             Button(
                 onClick = {
                     navController.navigate("login") {

@@ -2,175 +2,166 @@ package com.example.level_up.view
 
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookOnline
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Gamepad
-import androidx.compose.material.icons.filled.Grass
 import androidx.compose.material.icons.filled.Headset
-import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.LunchDining
 import androidx.compose.material.icons.filled.Mouse
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.TableBar
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.level_up.ui.components.TopBarLevelUp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
 fun DrawerMenu(
-    username:String,
+    username: String,
     navController: NavController
-){ // inicio
+) { // inicio función
 
-    Column(modifier =Modifier.fillMaxSize())
-    { //inicio columna
-        Box(
-            modifier =Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .background(MaterialTheme.colorScheme.onBackground)
-        ) // fin box
-        { //inicio contenido
-            Text(
-                text="Categorias user:$username",
-                style=MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onPrimary,
-                modifier =Modifier
-                    .align(Alignment.BottomStart)
+    // ----------- Lista de productos
+    val productos = listOf(
+        Triple("Auriculares Gamer HyperX", "35000", Icons.Default.Headset),
+        Triple("Mouse Logitech G203", "30000", Icons.Default.Mouse),
+        Triple("PlayStation 5", "550000", Icons.Default.Gamepad),
+        Triple("Mousepad", "5000", Icons.Default.BookOnline),
+        Triple("Carcassone", "10000", Icons.Default.TableBar),
+        Triple("Catan", "10000", Icons.Default.TableBar),
+        Triple("Escanear QR", "", Icons.Default.CameraAlt),
+    )
+
+    Scaffold(
+        topBar = {
+            TopBarLevelUp(
+                onLogoutClick = {
+                    // Acción de cierre de sesión
+                    navController.navigate("login") {
+                        popUpTo("login") { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
             )
-        } //fin contenido
+        },
+        containerColor = Color.Black
+    ) { innerPadding ->
 
-        // LazyColumn: Crear la lista de elemnetos que se pueden desplazar verticalmente
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .background(Color.Black)
+        ) { // inicio columna
 
-        LazyColumn( modifier =Modifier.weight(1f)){
-            item{
-                NavigationDrawerItem(
-                    label={Text("Auriculares gamer hyperX")},
-                    selected = false,
-                    onClick = {
-                        val nombre = Uri.encode("Auriculares gamer hyperX")
-                        val precio="35000"
-                        navController.navigate("ProductoFormScreen/$nombre/$precio")
-                    },//fin onclick
-                    icon = {Icon(Icons.Default.Headset , contentDescription = "Headset"  )}
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = "Catálogo Gamer",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color.White,
+                    modifier = Modifier.weight(1f)
                 )
-            }// fin item 1
-
-            item{
-                NavigationDrawerItem(
-                    label={Text("Mouse logitech g203")},
-                    selected = false,
-                    onClick = {
-
-                        val nombre = Uri.encode("Mouse logitech g203")
-                        val precio="30000"
-                        navController.navigate("ProductoFormScreen/$nombre/$precio")
-
-                    },//fin onclick
-                    icon = {Icon(Icons.Default.Mouse , contentDescription = "Mouse"  )}
+                Text(
+                    text = "@$username", // muestra el nombre del usuario
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF1E90FF)
                 )
-            }// fin item 2
+            } // fin encabezado
 
-            item{
-                NavigationDrawerItem(
-                    label={Text("Playstation 5")},
-                    selected = false,
-                    onClick = {
+            // ----------- Lista de productos
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            ) { // inicio lista
 
-                        val nombre = Uri.encode("Playstation 5")
-                        val precio="550000"
-                        navController.navigate("ProductoFormScreen/$nombre/$precio")
+                items(productos) { item ->
+                    val nombre = item.first
+                    val precio = item.second
+                    val icono = item.third
 
-                    },//fin onclick
-                    icon = {Icon(Icons.Default.Gamepad , contentDescription = "Playstation 5"  )}
-                )
-            }// fin item 3
+                    // Cada producto es una tarjeta
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp)
+                            .clickable {
+                                if (nombre == "Escanear QR") {
+                                    navController.navigate("camera")
+                                } else {
+                                    val encoded = Uri.encode(nombre)
+                                    navController.navigate("ProductoFormScreen/$encoded/$precio")
+                                }
+                            },
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFF1A1A1A) // Fondo oscuro gamer
+                        ),
+                        shape = MaterialTheme.shapes.medium
+                    ) { // inicio card
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(14.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Ícono de producto
+                            Icon(
+                                imageVector = icono,
+                                contentDescription = "Icono producto",
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .padding(end = 12.dp)
+                            )
 
-            item{
-                NavigationDrawerItem(
-                    label={Text("Mousepad")},
-                    selected = false,
-                    onClick = {
+                            // Nombre y precio
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = nombre,
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                if (precio.isNotBlank()) {
+                                    Text(
+                                        text = "Precio: $precio",
+                                        color = Color(0xFF39FF14), // verde neón
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            } // fin columna texto
+                        } // fin row
+                    } // fin card
+                } // fin items
+            } // fin LazyColumn
 
-                        val nombre = Uri.encode("Mousepad")
-                        val precio="5000"
-                        navController.navigate("ProductoFormScreen/$nombre/$precio")
+            //footer
+            Text(
+                text = "@ 2025 Level Up Gaming APP",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                textAlign = TextAlign.Center
+            )
 
-                    },//fin onclick
-                    icon = {Icon(Icons.Default.BookOnline, contentDescription = "Mousepad"  )}
-                )
-            }// fin item 4
-
-            item{
-                NavigationDrawerItem(
-                    label={Text("Carcassone")},
-                    selected = false,
-                    onClick = {
-
-                        val nombre = Uri.encode("Carcassone")
-                        val precio="10000"
-                        navController.navigate("ProductoFormScreen/$nombre/$precio")
-
-                    },//fin onclick
-                    icon = {Icon(Icons.Default.TableBar , contentDescription = "Carcassone"  )}
-                )
-            }// fin item 5
-
-            item{
-                NavigationDrawerItem(
-                    label={Text("Escanear QR")},
-                    selected = false,
-                    onClick = {
-                        navController.navigate("camera")
-                    },//fin onclick
-                    icon = {Icon(Icons.Default.CameraAlt , contentDescription = "Camera"  )}
-                )
-            }// fin item 6
-
-        } // fin Lazy
-
-//Footer
-
-        Text(
-            text="@ 2025 Level Up Gaming APP",
-            style=MaterialTheme.typography.bodySmall,
-            modifier =Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            textAlign = TextAlign.Center
-
-        )
-
-
-    } //fin columna
-
-
-}// fin DrawerMenu
-
-
-@Preview(showBackground = true)
-@Composable
-
-
-fun DrawerMenuPreview(){
-    val navController = androidx.navigation.compose.rememberNavController()
-    DrawerMenu(username = "Usuario Prueba", navController = navController)
-}
+        } // fin columna principal
+    } // fin Scaffold
+} // fin DrawerMenu
