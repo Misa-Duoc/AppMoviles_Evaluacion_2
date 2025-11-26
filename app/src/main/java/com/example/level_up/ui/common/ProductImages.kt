@@ -18,7 +18,7 @@ fun productImageResByName(nombre: String): Int {
         "auriculares gamer hyperx" -> R.drawable.auriculares_gamer_hyperx
         "mouse logitech g203" -> R.drawable.mouse_logitech_g203
         "playstation 5" -> R.drawable.playstation5
-        "mousepad" -> R.drawable.mousepad1
+        "mousepad" -> R.drawable.level_up_gamer_logo
         "carcassone" -> R.drawable.carcassonne
         "catan" -> R.drawable.catan
         else -> R.drawable.placeholder

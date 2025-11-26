@@ -15,9 +15,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kotlinx.coroutines.flow.map
 import com.example.level_up.ui.login.LoginScreen
+import com.example.level_up.ui.login.RegistroScreen
 import com.example.level_up.view.DrawerMenu
-import com.example.level_up.view.ProductoFormScreen
 import com.example.level_up.ui.camera.CameraScreen
+import com.example.level_up.ui.ruta.RutaSucursalScreen
 
 @Composable
 fun AppNav() {
@@ -33,7 +34,7 @@ fun AppNav() {
         transitionSpec = {
             fadeIn() togetherWith fadeOut()
         }
-    ) {   // <- aquí empieza el contenido animado
+    ) { // aquí empieza el contenido animado
 
         // 3. NavHost dentro del AnimatedContent
         NavHost(
@@ -41,12 +42,17 @@ fun AppNav() {
             startDestination = "login"
         ) {
 
-            // login
+            // LOGIN
             composable("login") {
                 LoginScreen(navController = navController)
             }
 
-            // drawer
+            // NUEVO USUARIO
+            composable("register") {
+                RegistroScreen(navController = navController)
+            }
+
+            // DRAWER
             composable(
                 route = "DrawerMenu/{username}",
                 arguments = listOf(
@@ -57,26 +63,14 @@ fun AppNav() {
                 DrawerMenu(username = username, navController = navController)
             }
 
-            // formulario
-            composable(
-                route = "ProductoFormScreen/{nombre}/{precio}",
-                arguments = listOf(
-                    navArgument("nombre") { type = NavType.StringType },
-                    navArgument("precio") { type = NavType.StringType }
-                )
-            ) { backStackEntry ->
-                val nombre = Uri.decode(backStackEntry.arguments?.getString("nombre") ?: "")
-                val precio = backStackEntry.arguments?.getString("precio") ?: ""
-                ProductoFormScreen(
-                    navController = navController,
-                    nombre = nombre,
-                    precio = precio
-                )
-            }
-
-            // cámara
+            // CÁMARA
             composable("camera") {
                 CameraScreen()
+            }
+
+            // RUTA A SUCURSAL
+            composable("Avenida Concha Y Toro, Av. San Carlos 1340, Puente Alto, Región Metropolitana") {
+                RutaSucursalScreen(navController = navController)
             }
         }
     }

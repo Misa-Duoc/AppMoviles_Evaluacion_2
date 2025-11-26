@@ -1,10 +1,5 @@
 package com.example.level_up.ui.login
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -12,22 +7,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.level_up.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
+fun RegistroScreen(
     navController: NavController,
-    vm: LoginViewModel = viewModel()
+    vm: RegistroViewModel = viewModel()
 ) {
     val state = vm.uiState
+    var showPass by remember { mutableStateOf(false) }
+    var showConfirmPass by remember { mutableStateOf(false) }
 
     val colorScheme = darkColorScheme(
         primary = Color(0xFF1E90FF),
@@ -44,7 +39,7 @@ fun LoginScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Level Up - Login", color = Color.White) },
+                    title = { Text("Nuevo usuario", color = Color.White) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Black
                     )
@@ -59,56 +54,14 @@ fun LoginScreen(
                     .fillMaxSize()
                     .background(Color.Black)
                     .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // ---------- ANIMACIÓN DEL LOGO ----------
-                var startAnimation by remember { mutableStateOf(false) }
-
-                // Disparamos la animación una sola vez al entrar
-                LaunchedEffect(Unit) {
-                    startAnimation = true
-                }
-
-                val scale by animateFloatAsState(
-                    targetValue = if (startAnimation) 1f else 0.6f,
-                    animationSpec = tween(
-                        durationMillis = 800,
-                        easing = FastOutSlowInEasing
-                    ),
-                    label = ""
-                )
-
-                val alpha by animateFloatAsState(
-                    targetValue = if (startAnimation) 1f else 0f,
-                    animationSpec = tween(
-                        durationMillis = 800,
-                        easing = LinearEasing
-                    ),
-                    label = ""
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.level_up_gamer_logo),
-                    contentDescription = "Logo Level Up",
-                    modifier = Modifier
-                        .size(250.dp)
-                        .graphicsLayer(
-                            scaleX = scale,
-                            scaleY = scale,
-                            alpha = alpha
-                        )
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-                // ----------------------------------------
-
                 Text(
-                    text = "Inicia sesión",
+                    text = "Crear nuevo usuario",
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Color(0xFF1E90FF),
-                    fontWeight = FontWeight.Bold
+                    color = Color(0xFF1E90FF)
                 )
 
                 // Usuario
@@ -154,7 +107,10 @@ fun LoginScreen(
                         onValueChange = vm::onPasswordChange,
                         label = { Text("Contraseña", color = Color.White) },
                         singleLine = true,
-                        visualTransformation = PasswordVisualTransformation('•'),
+                        visualTransformation = if (showPass)
+                            VisualTransformation.None
+                        else
+                            PasswordVisualTransformation('•'),
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Color(0xFF1E90FF),
@@ -166,7 +122,38 @@ fun LoginScreen(
                     )
                 }
 
-                // Error
+                // Confirmar contraseña
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        "Confirmar contraseña",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                    OutlinedTextField(
+                        value = state.confirmPassword,
+                        onValueChange = vm::onConfirmPasswordChange,
+                        label = { Text("Repite la contraseña", color = Color.White) },
+                        singleLine = true,
+                        visualTransformation = if (showConfirmPass)
+                            VisualTransformation.None
+                        else
+                            PasswordVisualTransformation('•'),
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color(0xFF1E90FF),
+                            unfocusedBorderColor = Color.White,
+                            cursorColor = Color.White,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent
+                        )
+                    )
+                }
+
+                // Error / éxito
                 state.error?.let { msg ->
                     Text(
                         text = msg,
@@ -175,16 +162,22 @@ fun LoginScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                state.success?.let { msg ->
+                    Text(
+                        text = msg,
+                        color = Color(0xFF39FF14),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
-                // Botón login
+                Spacer(modifier = Modifier.height(20.dp))
+
                 Button(
                     onClick = {
-                        vm.submit { user ->
-                            navController.navigate("DrawerMenu/$user") {
-                                popUpTo("login") { inclusive = true }
-                                launchSingleTop = true
-                            }
+                        vm.submit {
+                            // Al crear usuario, volvemos al login
+                            navController.popBackStack()
                         }
                     },
                     enabled = !state.isLoading,
@@ -194,17 +187,11 @@ fun LoginScreen(
                         contentColor = Color.White
                     )
                 ) {
-                    Text(if (state.isLoading) "Validando..." else "Iniciar sesión")
+                    Text(if (state.isLoading) "Creando..." else "Registrar usuario")
                 }
 
-                // Botón nuevo usuario
-                TextButton(
-                    onClick = { navController.navigate("register") }
-                ) {
-                    Text(
-                        text = "Nuevo usuario",
-                        color = Color(0xFF1E90FF)
-                    )
+                TextButton(onClick = { navController.popBackStack() }) {
+                    Text("Volver al login", color = Color(0xFF1E90FF))
                 }
             }
         }

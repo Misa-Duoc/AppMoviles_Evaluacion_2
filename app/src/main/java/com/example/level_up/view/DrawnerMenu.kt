@@ -22,13 +22,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.level_up.ui.components.TopBarLevelUp
+import androidx.compose.material3.Text
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerMenu(
-    username: String,
-    navController: NavController
-) { // inicio función
+fun DrawerMenu(username: String, navController: NavController) {
+    val context = LocalContext.current
 
     // ----------- Lista de productos
     val productos = listOf(
@@ -150,6 +154,14 @@ fun DrawerMenu(
                     } // fin card
                 } // fin items
             } // fin LazyColumn
+
+            Button(
+                onClick = { navController.navigate("rutaSucursal") },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Cómo llegar a la sucursal")
+            }
+
 
             //footer
             Text(
