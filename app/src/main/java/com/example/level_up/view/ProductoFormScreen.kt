@@ -16,48 +16,40 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.level_up.data.model.Producto
 import com.example.level_up.ui.common.productImageResByName
 import com.example.level_up.viewmodel.ProductoViewModel
+import com.example.level_up.viewmodel.PedidoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductoFormScreen(
     navController: NavController,
     nombre: String,
-    precio: String
-){ // inicio función
+    precio: String,
+    productoViewModel: ProductoViewModel,
+    pedidoViewModel: PedidoViewModel
+) {
+    // Usar SIEMPRE el ViewModel que llega por parámetro
+    val productos: List<Producto> by productoViewModel.productos.collectAsState()
 
-    // estados de la pantalla
+    // Estados de la pantalla
     var cantidad by remember { mutableStateOf(1) }
     var direccion by remember { mutableStateOf(TextFieldValue("")) }
     var direccionError by remember { mutableStateOf<String?>(null) }
     var tipoEntrega by remember { mutableStateOf(false) }
     var showSuccess by remember { mutableStateOf(false) }
 
-    // viewmodel
-    val viewModel: ProductoViewModel = viewModel()
-    val productos: List<Producto> by viewModel.productos.collectAsState()
-
-    // imagen y valores
-    val imageResId = productImageResByName(nombre)   // 👈 aquí va tu imagen real
+    val imageResId = productImageResByName(nombre)
     val precioInt = precio.toIntOrNull() ?: 0
     val total = precioInt * cantidad
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "Detalle del producto",
-                        color = Color.White
-                    )
-                },
+                title = { Text("Detalle del producto", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
@@ -72,9 +64,7 @@ fun ProductoFormScreen(
                 )
             )
         },
-        bottomBar = {
-            BottomAppBar(containerColor = Color.Black) {}
-        },
+        bottomBar = { BottomAppBar(containerColor = Color.Black) {} },
         containerColor = Color.Black
     ) { innerPadding ->
 
@@ -85,9 +75,8 @@ fun ProductoFormScreen(
                 .background(Color.Black)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
-        ) { // inicio columna
+        ) {
 
-            // imagen del producto
             Image(
                 painter = painterResource(id = imageResId),
                 contentDescription = "Imagen del producto: $nombre",
@@ -97,19 +86,21 @@ fun ProductoFormScreen(
                 contentScale = ContentScale.Fit
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-            // título y precio
-            Text(text = nombre, style = MaterialTheme.typography.headlineSmall, color = Color.White)
-            Text(text = "Precio Unitario: $$precioInt", style = MaterialTheme.typography.bodyLarge, color = Color.White)
+            Text(nombre, style = MaterialTheme.typography.headlineSmall, color = Color.White)
+            Text(
+                "Precio Unitario: $$precioInt",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White
+            )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-            // cantidad
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ){
+            ) {
                 Text("Cantidad:", color = Color.White)
 
                 FilledIconButton(
@@ -120,7 +111,11 @@ fun ProductoFormScreen(
                     )
                 ) { Text("-") }
 
-                Text(cantidad.toString(), style = MaterialTheme.typography.titleMedium, color = Color.White)
+                Text(
+                    cantidad.toString(),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
 
                 FilledIconButton(
                     onClick = { cantidad++ },
@@ -129,20 +124,18 @@ fun ProductoFormScreen(
                         contentColor = Color.Black
                     )
                 ) { Text("+") }
-            } // fin row cantidad
+            }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))
 
-            // total
             Text(
                 text = "Total: $$total",
                 style = MaterialTheme.typography.titleMedium,
                 color = Color(0xFF1E90FF)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-            // dirección
             OutlinedTextField(
                 value = direccion,
                 onValueChange = {
@@ -170,7 +163,6 @@ fun ProductoFormScreen(
                 textStyle = LocalTextStyle.current.copy(color = Color.White)
             )
 
-            // checkbox
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
                     checked = tipoEntrega,
@@ -186,9 +178,8 @@ fun ProductoFormScreen(
                 Text("Despacho a domicilio", color = Color.White)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-            // botón
             Button(
                 onClick = {
                     if (direccion.text.isBlank()) {
@@ -204,7 +195,14 @@ fun ProductoFormScreen(
                         tipoEntrega = tipoEntrega
                     )
 
-                    viewModel.guardarProducto(producto)
+                    // Actualiza el carrito compartido
+                    productoViewModel.guardarProducto(producto)
+
+                    // Crea el pedido en el historial compartido
+                    pedidoViewModel.crearPedido(
+                        productosCarrito = listOf(producto),
+                        direccion = direccion.text
+                    )
 
                     direccion = TextFieldValue("")
                     tipoEntrega = false
@@ -228,10 +226,13 @@ fun ProductoFormScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-            // lista de pedidos
-            Text("Pedidos realizados:", style = MaterialTheme.typography.headlineSmall, color = Color.White)
+            Text(
+                "Pedidos realizados:",
+                style = MaterialTheme.typography.headlineSmall,
+                color = Color.White
+            )
 
             if (productos.isNotEmpty()) {
                 LazyColumn(modifier = Modifier.weight(1f)) {
@@ -247,7 +248,10 @@ fun ProductoFormScreen(
                             Column(modifier = Modifier.padding(8.dp)) {
                                 Text("${producto.nombre} - ${producto.precio}", color = Color.White)
                                 Text("Cantidad: ${producto.cantidad}", color = Color.White)
-                                Text("Dirección entrega: ${producto.direccion}", color = Color.White)
+                                Text(
+                                    "Dirección entrega: ${producto.direccion}",
+                                    color = Color.White
+                                )
                             }
                         }
                     }
@@ -260,17 +264,6 @@ fun ProductoFormScreen(
                     color = Color.Gray
                 )
             }
-
-        } // fin columna
-    } // fin scaffold
-} // fin ProductoFormScreen
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewProductoFormScreen(){
-    ProductoFormScreen(
-        navController = rememberNavController(),
-        nombre = "Carcassone",
-        precio = "$10000"
-    )
+        }
+    }
 }
