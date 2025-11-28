@@ -63,7 +63,7 @@ fun openRouteToBranch(context: Context, originAddress: String) {
 
     val originEncoded = URLEncoder.encode(originAddress, StandardCharsets.UTF_8.toString())
     val destEncoded = URLEncoder.encode(
-        "Av. Apoquindo 3000, Las Condes, Chile",
+        "Avenida Concha Y Toro, Av. San Carlos 1340, Puente Alto, Región Metropolitana",
         StandardCharsets.UTF_8.toString()
     )
 
