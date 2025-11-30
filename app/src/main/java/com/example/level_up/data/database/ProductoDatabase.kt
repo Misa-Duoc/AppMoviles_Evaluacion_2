@@ -16,13 +16,12 @@ import com.example.level_up.data.model.PedidoItem
         Pedido::class,
         PedidoItem::class
     ],
-    version = 2,
-    exportSchema = false
+    version = 1
 )
 abstract class ProductoDatabase : RoomDatabase() {
-
     abstract fun productoDao(): ProductoDao
-    abstract fun pedidoDao(): PedidoDao
+    abstract fun pedidoDao(): PedidoDao       // 👈 IMPORTANTE
+
 
     companion object {
         @Volatile

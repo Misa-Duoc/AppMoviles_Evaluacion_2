@@ -1,17 +1,17 @@
 package com.example.level_up.viewmodel
 
-import ProductoRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.level_up.data.repository.PedidoRepository
 
-class ProductoViewModelFactory(
-    private val repository: ProductoRepository
+class PedidoViewModelFactory(
+    private val repository: PedidoRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ProductoViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(PedidoViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ProductoViewModel(repository) as T
+            return PedidoViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }

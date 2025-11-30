@@ -1,5 +1,6 @@
 package com.example.level_up.navigation
 
+import ProductoRepository
 import android.net.Uri
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -8,13 +9,16 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.map
+
 import com.example.level_up.ui.login.LoginScreen
 import com.example.level_up.ui.login.RegistroScreen
 import com.example.level_up.view.DrawerMenu
@@ -24,36 +28,41 @@ import com.example.level_up.view.HistorialPedidosScreen
 import com.example.level_up.ui.camera.CameraScreen
 import com.example.level_up.ui.profile.ProfileScreen
 import com.example.level_up.ui.ruta.RutaSucursalScreen
+import com.example.level_up.view.GameNewsScreen
+
+import com.example.level_up.data.database.ProductoDatabase
+import com.example.level_up.data.repository.PedidoRepository
+
 import com.example.level_up.viewmodel.ProductoViewModel
 import com.example.level_up.viewmodel.PedidoViewModel
 import com.example.level_up.viewmodel.GameViewModel
-import com.example.level_up.view.GameNewsScreen
+import com.example.level_up.viewmodel.PedidoViewModelFactory
 
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import com.example.level_up.data.database.ProductoDatabase
-import com.example.level_up.data.repository.ProductoRepository
 import com.example.level_up.viewmodel.ProductoViewModelFactory
-
 
 @Composable
 fun AppNav() {
-    val navController = rememberNavController()
 
+    val navController = rememberNavController()
     val context = LocalContext.current
 
-    // Crear instancia de Room una sola vez
+    // ---------- Instancia de Room (una sola vez) ----------
     val database = remember { ProductoDatabase.getDatabase(context) }
+
+    // ---------- Repositorios ----------
     val productoRepository = remember { ProductoRepository(database.productoDao()) }
+    val pedidoRepository   = remember { PedidoRepository(database.pedidoDao()) }
 
-
-    // ViewModels compartidos
+// ---------- ViewModels compartidos ----------
     val productoViewModel: ProductoViewModel = viewModel(
         factory = ProductoViewModelFactory(productoRepository)
     )
 
-    val pedidoViewModel: PedidoViewModel = viewModel()
+    val pedidoViewModel: PedidoViewModel = viewModel(
+        factory = PedidoViewModelFactory(pedidoRepository)
+    )
 
+    // ---------- Animación entre pantallas ----------
     val currentRoute by navController.currentBackStackEntryFlow
         .map { it.destination.route ?: "" }
         .collectAsState(initial = "")
@@ -66,14 +75,17 @@ fun AppNav() {
             navController = navController,
             startDestination = "login"
         ) {
+            // LOGIN
             composable("login") {
                 LoginScreen(navController = navController)
             }
 
+            // REGISTRO
             composable("register") {
                 RegistroScreen(navController = navController)
             }
 
+            // MENÚ PRINCIPAL (catálogo)
             composable(
                 route = "DrawerMenu/{username}",
                 arguments = listOf(
@@ -88,6 +100,7 @@ fun AppNav() {
                 )
             }
 
+            // FORMULARIO / DETALLE DE PRODUCTO
             composable(
                 route = "productoForm/{nombre}/{precio}",
                 arguments = listOf(
@@ -107,6 +120,7 @@ fun AppNav() {
                 )
             }
 
+            // CARRITO
             composable("cart") {
                 CartScreen(
                     navController = navController,
@@ -115,6 +129,7 @@ fun AppNav() {
                 )
             }
 
+            // HISTORIAL DE PEDIDOS ("Mis pedidos")
             composable("historial") {
                 HistorialPedidosScreen(
                     navController = navController,
@@ -122,18 +137,22 @@ fun AppNav() {
                 )
             }
 
+            // PERFIL
             composable("profile") {
                 ProfileScreen(navController = navController)
             }
 
+            // CÁMARA / QR
             composable("camera") {
                 CameraScreen()
             }
 
+            // RUTA A SUCURSAL
             composable("rutaSucursal") {
                 RutaSucursalScreen(navController = navController)
             }
 
+            // NOTICIAS DE JUEGOS
             composable("gameNews") {
                 val gameViewModel: GameViewModel = viewModel()
                 GameNewsScreen(

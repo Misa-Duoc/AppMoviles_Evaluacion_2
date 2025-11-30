@@ -1,41 +1,51 @@
 package com.example.level_up.data.repository
 
 import com.example.level_up.data.dao.PedidoDao
-import com.example.level_up.data.model.*
+import com.example.level_up.data.model.Pedido
+import com.example.level_up.data.model.PedidoConItems
+import com.example.level_up.data.model.PedidoEstado
+import com.example.level_up.data.model.PedidoItem
+import com.example.level_up.data.model.Producto
 import kotlinx.coroutines.flow.Flow
 
 class PedidoRepository(private val dao: PedidoDao) {
-/*
+
     fun observarPedidos(): Flow<List<PedidoConItems>> = dao.getPedidosConItems()
-    fun getPedidos(): Flow<List<PedidoConItems>> = dao.getPedidos()
 
     suspend fun crearPedido(productos: List<Producto>, direccion: String) {
-        // Producto.precio y cantidad son String: convertir
-        val total = productosCarrito.sumOf { it.precio.toDoubleOrNull() ?: 0.0 }
+        val total = productos.sumOf { it.precio.toDoubleOrNull() ?: 0.0 }
 
-        val pedidoId = dao.insertPedido(
-            Pedido(
-                fechaMillis = System.currentTimeMillis(),
-                total = total,
-                direccion = direccion
-            )
+        val pedido = Pedido(
+            fechaMillis = System.currentTimeMillis(),
+            total = total,
+            direccion = direccion,
+            estado = PedidoEstado.PENDIENTE      // 👈 enum directo
         )
 
-        val items = productosCarrito.map {
+        // ID autogenerado del pedido
+        val pedidoId = dao.insertPedido(pedido)
+
+        val items = productos.map { p ->
             PedidoItem(
                 pedidoId = pedidoId,
-                productoId = it.id,
-                nombre = it.nombre,
-                precioUnitario = it.precio.toDoubleOrNull() ?: 0.0,
-                cantidad = it.cantidad.toIntOrNull() ?: 1
+                productoId = 0L,                  // 👈 placeholder, si no tienes ID de producto
+                nombre = p.nombre,
+                precioUnitario = p.precio.toDoubleOrNull() ?: 0.0,
+                cantidad = p.cantidad.toIntOrNull() ?: 1
             )
         }
+
         dao.insertItems(items)
     }
 
-    suspend fun cambiarEstado(pedido: Pedido, nuevoEstado: PedidoEstado) {
-        dao.updatePedido(pedido.copy(estado = nuevoEstado))
-    }
+    suspend fun avanzarEstado(pedido: Pedido) {
+        val siguiente = when (pedido.estado) {
+            PedidoEstado.PENDIENTE   -> PedidoEstado.PREPARANDO
+            PedidoEstado.PREPARANDO  -> PedidoEstado.EN_CAMINO
+            PedidoEstado.EN_CAMINO   -> PedidoEstado.ENTREGADO
+            PedidoEstado.ENTREGADO   -> PedidoEstado.ENTREGADO
+        }
 
- */
+        dao.updatePedido(pedido.copy(estado = siguiente))
+    }
 }

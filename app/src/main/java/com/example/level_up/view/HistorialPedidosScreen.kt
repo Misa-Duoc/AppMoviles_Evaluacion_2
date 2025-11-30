@@ -125,6 +125,8 @@ private fun PedidoCard(
             )
 
             if (pedido.estado != PedidoEstado.ENTREGADO) {
+
+
                 Spacer(Modifier.height(12.dp))
                 Button(
                     onClick = onAvanzar,

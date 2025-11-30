@@ -2,6 +2,7 @@ package com.example.level_up.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
@@ -13,16 +14,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PedidoDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPedido(pedido: Pedido): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItems(items: List<PedidoItem>)
+
+    @Update
+    suspend fun updatePedido(pedido: Pedido)
 
     @Transaction
     @Query("SELECT * FROM pedidos ORDER BY fechaMillis DESC")
     fun getPedidosConItems(): Flow<List<PedidoConItems>>
-
-    @Update
-    suspend fun updatePedido(pedido: Pedido)
 }

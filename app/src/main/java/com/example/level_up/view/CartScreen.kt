@@ -120,31 +120,24 @@ fun CartScreen(
                 Button(
                     onClick = {
                         if (productos.isNotEmpty()) {
-                            // Usamos la dirección del primer producto (todos comparten la misma)
-                            val direccion = productos.first().direccion
+                            // Dirección de ejemplo; si tienes un TextField de dirección
+                            // puedes pasar su valor aquí.
+                            val direccion =
+                                productos.firstOrNull()?.direccion ?: "Dirección no especificada"
 
-                            // Crea un pedido con TODOS los productos del carrito
-                            pedidoViewModel.crearPedido(
-                                productosCarrito = productos,
-                                direccion = direccion
-                            )
+                            // Guardar el pedido en Room (tabla pedidos + pedido_items)
+                            pedidoViewModel.crearPedido(productos, direccion)
 
-                            // Opcional: limpiar carrito después de confirmar
-                            // productoViewModel.limpiarCarrito()
+                            // Opcional: limpiar carrito si quieres
+                            // productos.forEach { productoViewModel.eliminarProducto(it) }
 
-                            // Navegar al historial
+                            // Ir al historial de pedidos
                             navController.navigate("historial")
                         }
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF39FF14),
-                        contentColor = Color.Black
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Confirmar Pedido")
+                    Text("Confirmar pedido")
                 }
             }
         }

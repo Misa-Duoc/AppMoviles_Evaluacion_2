@@ -1,24 +1,13 @@
-package com.example.level_up.data.repository
-
 import com.example.level_up.data.dao.ProductoDao
 import com.example.level_up.data.model.Producto
-import kotlinx.coroutines.flow.Flow
 
-class ProductoRepository(private val productoDao: ProductoDao) {
+class ProductoRepository(private val dao: ProductoDao) {
 
-    suspend fun insertarProducto(producto: Producto) {
-        productoDao.insertarProducto(producto)
-    }
+    fun obtenerProductos() = dao.getProductos()          // Flow<List<Producto>>
 
-    fun obtenerProductos(): Flow<List<Producto>> {
-        return productoDao.obtenerProductos()
-    }
+    suspend fun insertarProducto(producto: Producto) = dao.insert(producto)
 
-    suspend fun eliminarProducto(producto: Producto) {
-        productoDao.eliminarProducto(producto)
-    }
+    suspend fun eliminarProducto(producto: Producto) = dao.delete(producto)
 
-    suspend fun actualizarProducto(producto: Producto) {
-        productoDao.actualizarProducto(producto)
-    }
+    suspend fun actualizarProducto(producto: Producto) = dao.update(producto)
 }
