@@ -29,12 +29,29 @@ import com.example.level_up.viewmodel.PedidoViewModel
 import com.example.level_up.viewmodel.GameViewModel
 import com.example.level_up.view.GameNewsScreen
 
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import com.example.level_up.data.database.ProductoDatabase
+import com.example.level_up.data.repository.ProductoRepository
+import com.example.level_up.viewmodel.ProductoViewModelFactory
+
+
 @Composable
 fun AppNav() {
     val navController = rememberNavController()
 
+    val context = LocalContext.current
+
+    // Crear instancia de Room una sola vez
+    val database = remember { ProductoDatabase.getDatabase(context) }
+    val productoRepository = remember { ProductoRepository(database.productoDao()) }
+
+
     // ViewModels compartidos
-    val productoViewModel: ProductoViewModel = viewModel()
+    val productoViewModel: ProductoViewModel = viewModel(
+        factory = ProductoViewModelFactory(productoRepository)
+    )
+
     val pedidoViewModel: PedidoViewModel = viewModel()
 
     val currentRoute by navController.currentBackStackEntryFlow
