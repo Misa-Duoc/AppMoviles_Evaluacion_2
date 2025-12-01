@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.level_up.utils.toFechaPedido
 import androidx.navigation.NavController
 import com.example.level_up.data.model.PedidoConItems
 import com.example.level_up.data.model.PedidoEstado
@@ -101,7 +102,7 @@ private fun PedidoCard(
             .fillMaxWidth()
             .clickable { /* Detalle opcional */ },
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1A1A1A) // mismo gris oscuro que en otras pantallas
+            containerColor = Color(0xFF1A1A1A)
         ),
         shape = MaterialTheme.shapes.medium
     ) {
@@ -113,7 +114,7 @@ private fun PedidoCard(
             )
             Text(
                 text = "Total: $${pedido.total}",
-                color = Color(0xFF1E90FF)      // azul usado en la app
+                color = Color(0xFF1E90FF)
             )
             Text(
                 text = "Estado: ${pedido.estado}",
@@ -125,20 +126,19 @@ private fun PedidoCard(
             )
 
             if (pedido.estado != PedidoEstado.ENTREGADO) {
-
-
                 Spacer(Modifier.height(12.dp))
                 Button(
                     onClick = onAvanzar,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF39FF14), // verde neón
+                        containerColor = Color(0xFF39FF14),
                         contentColor = Color.Black
                     ),
                     modifier = Modifier.align(Alignment.Start)
                 ) {
-                    Text("Avanzar estado")
+                    Text("Avanzar estado (Demostración)")
                 }
             }
         }
     }
 }
+

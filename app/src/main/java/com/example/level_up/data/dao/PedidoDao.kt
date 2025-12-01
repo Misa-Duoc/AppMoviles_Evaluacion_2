@@ -24,6 +24,6 @@ interface PedidoDao {
     suspend fun updatePedido(pedido: Pedido)
 
     @Transaction
-    @Query("SELECT * FROM pedidos ORDER BY fechaMillis DESC")
+    @Query("SELECT * FROM pedidos")
     fun getPedidosConItems(): Flow<List<PedidoConItems>>
 }

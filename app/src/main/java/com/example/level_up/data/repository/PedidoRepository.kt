@@ -16,7 +16,6 @@ class PedidoRepository(private val dao: PedidoDao) {
         val total = productos.sumOf { it.precio.toDoubleOrNull() ?: 0.0 }
 
         val pedido = Pedido(
-            fechaMillis = System.currentTimeMillis(),
             total = total,
             direccion = direccion,
             estado = PedidoEstado.PENDIENTE      // 👈 enum directo

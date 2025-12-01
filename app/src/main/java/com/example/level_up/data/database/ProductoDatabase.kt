@@ -16,7 +16,7 @@ import com.example.level_up.data.model.PedidoItem
         Pedido::class,
         PedidoItem::class
     ],
-    version = 1
+    version = 2
 )
 abstract class ProductoDatabase : RoomDatabase() {
     abstract fun productoDao(): ProductoDao
