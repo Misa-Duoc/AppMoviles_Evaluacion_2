@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.level_up.utils.toFechaPedido
 import androidx.navigation.NavController
 import com.example.level_up.data.model.PedidoConItems
 import com.example.level_up.data.model.PedidoEstado
@@ -120,6 +119,9 @@ private fun PedidoCard(
                 text = "Estado: ${pedido.estado}",
                 color = Color.White
             )
+
+
+
             Text(
                 text = "Productos: ${pedidoConItems.items.size}",
                 color = Color.White
